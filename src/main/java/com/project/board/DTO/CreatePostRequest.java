@@ -11,7 +11,7 @@ public class CreatePostRequest {
     @NotBlank(message = "게시글 내용을 입력해 주세요.")
     @Size(min=5,message = "게시글 내용은 최소 5자 이상 입력이 필요합니다.")
     private String post_content;
-    @NotNull(message="카테고리가 올바르지 않습니다.")
+    @NotNull(message="카테고리 입력이 필요합니다.")
     private Long post_category;
     private String[] post_keyword;
 
