@@ -18,6 +18,6 @@ public class CategoryEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long category_pid;
 
-    @Column(length=100)
+    @Column(length=100,nullable = false)
     private String category_name;
 }
