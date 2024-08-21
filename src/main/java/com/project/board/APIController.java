@@ -1,5 +1,7 @@
 package com.project.board;
 
+import com.project.board.DTO.CreateUserRequest;
+import com.project.board.Service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -25,6 +27,15 @@ public class APIController {
     @PostMapping("/post/wirte")
     public ResponseEntity<Void> CreatePost(@Valid @RequestBody CreatePostRequest createPostRequest){
         postService.CreatePost(createPostRequest);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
+
+    private final UserService userService;
+
+    @PostMapping("/user/signup")
+    public ResponseEntity<Void> CreateUser(@Valid @RequestBody CreateUserRequest createUserRequest){
+        userService.CreateUser(createUserRequest);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 }
