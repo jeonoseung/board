@@ -2,16 +2,7 @@ package com.project.board.Entity;
 
 import com.project.board.Enum.PostState;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -49,7 +40,7 @@ public class PostEntity {
     private LocalDateTime post_update_date;
 
     @Column(nullable = false)
-    private Long post_view;
+    private int post_view = 0;
 
     @ManyToOne
     @JoinColumn(name = "post_author", referencedColumnName = "user_pid",nullable = false)
@@ -66,5 +57,10 @@ public class PostEntity {
     }
     public void setState(PostState state){
         this.post_state = state;
+    }
+    @PrePersist
+    public void setDate(){
+        this.post_create_date = LocalDateTime.now();
+        this.post_update_date = LocalDateTime.now();
     }
 }

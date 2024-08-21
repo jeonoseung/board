@@ -26,4 +26,8 @@ public class RecPostEntity {
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime rec_date;
     
+    @PrePersist
+    public void setDate(){
+        this.rec_date = LocalDateTime.now();
+    }
 }

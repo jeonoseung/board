@@ -30,4 +30,9 @@ public class CommentEntity {
     @ManyToOne
     @JoinColumn(name = "comment_author", referencedColumnName = "user_pid",nullable = false)
     private UserEntity comment_author;
+
+    @PrePersist
+    public void setDate(){
+        this.comment_create_date = LocalDateTime.now();
+    }
 }
