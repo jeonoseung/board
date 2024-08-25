@@ -1,6 +1,7 @@
-package com.project.board;
+package com.project.board.RestController;
 
-import com.project.board.DTO.*;
+import com.project.board.DTO.CreateUserRequest;
+import com.project.board.DTO.LoginUserRequest;
 import com.project.board.DTO.Response.ResponseAccessToken;
 import com.project.board.DTO.Response.ResponseLoginToken;
 import com.project.board.DTO.Response.ResponseUserInfo;
@@ -11,27 +12,17 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import com.project.board.Service.PostService;
-
+import org.springframework.web.bind.annotation.CookieValue;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-public class APIController {
-
-    private final PostService postService;
-
-    @PostMapping("/post/wirte")
-    public ResponseEntity<Void> CreatePost(@Valid @RequestBody CreatePostRequest createPostRequest){
-        postService.CreatePost(createPostRequest);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
-    }
-
-
+public class UserRestController {
     private final UserService userService;
     private final JwtToken jwtToken;
-
+    
     @PostMapping("/user/signup")
     public ResponseEntity<Void> CreateUser(@Valid @RequestBody CreateUserRequest createUserRequest){
         userService.CreateUser(createUserRequest);
@@ -51,7 +42,7 @@ public class APIController {
 
         return ResponseEntity.status(HttpStatus.OK).body(body);
     }
-
+    
     @PostMapping("/user/info")
     public ResponseEntity<ResponseUserInfo> CheckUser(@CookieValue(value = "access_token") String cookieValue){
         jwtToken.validateToken(cookieValue);
@@ -74,4 +65,3 @@ public class APIController {
         return ResponseEntity.status(HttpStatus.OK).body(body);
     }
 }
-
