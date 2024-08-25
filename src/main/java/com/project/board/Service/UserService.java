@@ -45,13 +45,7 @@ public class UserService {
         return user_id;
     }
 
-    public void LoginUser(LoginUserRequest loginUserRequest){
-        String id = loginUserRequest.GetUserId();
-        String pass = loginUserRequest.GetUserPass();
-
-
-    }
-
+    //사용자 정보 조회
     public ResponseUserInfo GetUserInfo(String user_id){
         UserLoginCheck user = userRepo.userInfo(user_id);
         ResponseUserInfo responseUserInfo = new ResponseUserInfo();
@@ -59,11 +53,4 @@ public class UserService {
         return responseUserInfo;
     }
 
-    public String createToken(String subject) {
-        return "token";
-    }
-
-    public void RefreshUser(String RefreshCookie){
-
-    }
 }
