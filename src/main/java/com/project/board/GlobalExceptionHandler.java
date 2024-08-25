@@ -18,8 +18,12 @@ class SetBody {
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<String> handleIllegalArgumentException(IllegalArgumentException ex) {
-        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+    public ResponseEntity<SetBody> handleIllegalArgumentException(IllegalArgumentException ex) {
+
+        String message = ex.getMessage();
+        SetBody bodys = new SetBody();
+        bodys.SetErrorMessage(message);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(bodys);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -27,7 +31,6 @@ public class GlobalExceptionHandler {
         String message = ex.getBindingResult().getFieldError().getDefaultMessage();
         SetBody bodys = new SetBody();
         bodys.SetErrorMessage(message);
-        System.out.println(bodys);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(bodys);
     }
 }
