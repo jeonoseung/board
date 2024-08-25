@@ -19,18 +19,19 @@ public class UserEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long user_pid;
     
-    @Column(length=50,nullable = false)
+    @Column(length=50,nullable = false, unique = true)
     private String user_id;
     
     @Column(length=255,nullable = false)
     private String user_pass;
     
-    @Column(length=50,nullable = false)
+    @Column(length=50,nullable = false, unique = true)
     private String user_nickname;
     
     @Column(nullable = false)
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime user_create_date;
+
 
     public void setUserId(String id){
         this.user_id = id;
