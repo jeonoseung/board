@@ -1,12 +1,12 @@
 package com.project.board.Utils;
 
-
 import com.project.board.Enum.TokenType;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Encoders;
 import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.SignatureException;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
@@ -16,13 +16,17 @@ import java.util.Date;
 @Component
 public class JwtToken {
     
-    private final String SECRET_KEY = "XdkuHLdFXH/3qak4HMAQgAu42NQQ3548hzvhhJ55lbE=";
-    private final SecretKey key = Keys.hmacShaKeyFor(SECRET_KEY.getBytes());
-    
+    @Value("${JWT_SECRET_KEY}")
+    private String SECRET_KEY;
+
     public String encodeKey(String key){
         return Encoders.BASE64.encode(key.getBytes(StandardCharsets.UTF_8));
     }
     
+    public SecretKey setKey(){
+        return Keys.hmacShaKeyFor(SECRET_KEY.getBytes());
+    }
+
     public String createToken(String userId, TokenType Token) {
         int once_second = 1000;
         int second = once_second * 60;
@@ -41,7 +45,7 @@ public class JwtToken {
                 .setSubject(userId)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(expriation)
-                .signWith(key)
+                .signWith(setKey())
                 .compact();
     }
     
@@ -49,7 +53,7 @@ public class JwtToken {
     public Claims getClaim(String token) {
         Claims claims = Jwts
                 .parserBuilder()
-                .setSigningKey(key)
+                .setSigningKey(setKey())
                 .build()
                 .parseClaimsJws(token)
                 .getBody();
@@ -65,7 +69,7 @@ public class JwtToken {
     public boolean validateToken(String token) {
     
         try {
-            Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
+            Jwts.parserBuilder().setSigningKey(setKey()).build().parseClaimsJws(token);
             return true;
         } catch (SignatureException e) {
             System.out.println("서명 검증 실패");
