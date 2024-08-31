@@ -5,6 +5,7 @@ import com.project.board.Service.PostService;
 import com.project.board.Service.UserService;
 import com.project.board.Utils.JwtToken;
 import com.project.board.Utils.ModelAndViewBuilder;
+import com.project.board.Utils.RequestCookie;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpRequest;
@@ -46,13 +47,27 @@ public class PageController {
 
     @RequestMapping("/write")
     public ModelAndView WritePage(HttpServletRequest req){
-        ModelAndView mv = new ModelAndViewBuilder(jwtToken,userService).init(req).viewContent("write/index.jsp").build();
+        RequestCookie requestCookie = new RequestCookie(req);
+        ModelAndView mv;
+        if(requestCookie.checkCookie("access_token")){
+            mv = new ModelAndViewBuilder(jwtToken,userService).init(req).viewContent("write/index.jsp").build();
+        }
+        else {
+            mv = new ModelAndViewBuilder(jwtToken,userService).init(req).viewContent("login/index.jsp").build();
+        }
         return mv;
     }
 
     @RequestMapping("/login")
     public ModelAndView LoginPage(HttpServletRequest req){
+
         ModelAndView mv = new ModelAndViewBuilder(jwtToken,userService).init(req).viewContent("login/index.jsp").build();
+        return mv;
+    }
+
+    @RequestMapping("/signup")
+    public ModelAndView SinghUpPage(HttpServletRequest req){
+        ModelAndView mv = new ModelAndViewBuilder(jwtToken,userService).init(req).viewContent("signup/index.jsp").build();
         return mv;
     }
 }

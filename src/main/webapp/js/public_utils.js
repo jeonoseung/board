@@ -1,11 +1,3 @@
-
-class DetailError extends Error {
-    constructor(message, details) {
-        super(message)
-        this.details = details;
-    }
-}
-
 const setCookie = ({ name,value,age }) =>{
     const date = new Date()
     date.setTime(date.getTime() + age)

@@ -7,7 +7,7 @@
     <div class="container">
         <div class="content">
             <c:forEach var="item" items="${post}">
-                <div>
+                <div class="post-row">
                     <p>${item.post_pid}</p>
                     <p>${item.post_title}</p>
                 </div>

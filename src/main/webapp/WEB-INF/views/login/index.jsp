@@ -24,9 +24,11 @@
                 spellcheck="false"
             />
             <div class="btn-block">
-                <button onclick="" class="submit-button bg-dark">
-                    회원가입
-                </button>
+                <a href="/signup">
+                    <button onclick="" class="submit-button bg-dark">
+                        회원가입
+                    </button>
+                </a>
                 <button onclick="clickLogin()" class="submit-button bg-primary">
                     로그인
                 </button>
