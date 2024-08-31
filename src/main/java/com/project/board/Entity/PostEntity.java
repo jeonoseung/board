@@ -43,7 +43,7 @@ public class PostEntity {
     private int post_view = 0;
 
     @ManyToOne
-    @JoinColumn(name = "post_author", referencedColumnName = "user_pid",nullable = false)
+    @JoinColumn(name = "post_author", referencedColumnName = "user_id",nullable = false)
     private UserEntity post_author;
 
     public void setTitle(String title){
@@ -62,5 +62,8 @@ public class PostEntity {
     public void setDate(){
         this.post_create_date = LocalDateTime.now();
         this.post_update_date = LocalDateTime.now();
+    }
+    public void setAuthor(UserEntity user_pid){
+        this.post_author = user_pid;
     }
 }
