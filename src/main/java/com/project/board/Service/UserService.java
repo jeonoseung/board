@@ -1,9 +1,12 @@
 package com.project.board.Service;
 
-import com.project.board.DTO.CreateUserRequest;
-import com.project.board.DTO.LoginUserRequest;
+
+
+import com.project.board.DTO.QuerInterface.UserLoginCheck;
+import com.project.board.DTO.Request.CreateUserRequest;
+import com.project.board.DTO.Request.LoginUserRequest;
 import com.project.board.DTO.Response.ResponseUserInfo;
-import com.project.board.DTO.UserLoginCheck;
+
 import com.project.board.Entity.UserEntity;
 import com.project.board.Repo.UserRepo;
 
@@ -17,7 +20,7 @@ import org.springframework.stereotype.Service;
 public class UserService {
 
     private final UserRepo userRepo;
-    
+
     //회원 생성
     public void CreateUser(CreateUserRequest createUserRequest){
         UserEntity user = new UserEntity();

@@ -14,13 +14,13 @@
                 <div id="editor"></div>
             </div>
             <div class="btn-block">
-                <button onclick="ClickButton()" class="submit-button">
+                <button onclick="ClickButton()" class="submit-button bg-primary">
                     작성
                 </button>
             </div>
         </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.js"></script>
-    <script src="/js/write.js"></script>
+    <script src="/js/write.js?v=0.1"></script>
 </body>
 </html>

@@ -1,9 +1,11 @@
+
+
 const quill = new Quill('#editor', {
     theme: 'snow'
 });
 
 quill.root.setAttribute('spellcheck', false)
-const ClickButton = () =>{
+const ClickButton = async  () =>{
     const title = document.getElementById("title-input").value;
     const html = quill.root.innerHTML;
     const text = quill.root.innerText;
@@ -15,8 +17,20 @@ const ClickButton = () =>{
     }
     else {
         const body = {
-            title,
-            content:html
+            post_title:title,
+            post_content:html,
+            post_category:1
         }
+        Fetch.POST({
+            url:"/post",
+            body
+        })
+            .then(()=>{
+                alert("게시글이 작성되었습니다.\n게시글 목록으로 이동합니다.")
+                goPage("/")
+            })
+            .catch((error)=>{
+                alert(error.message)
+            })
     }
 }

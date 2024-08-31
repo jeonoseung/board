@@ -1,9 +1,13 @@
-package com.project.board.DTO;
+package com.project.board.DTO.Request;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
+@Setter
 public class CreatePostRequest {
     @NotBlank(message = "게시글 제목을 입력해 주세요.")
     @Size(min=5,max=50,message="게시글 제목은 최소 5자 ~ 최대 50자까지 입력이 가능합니다.")
