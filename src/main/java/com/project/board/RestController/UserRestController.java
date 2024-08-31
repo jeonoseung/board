@@ -1,7 +1,8 @@
 package com.project.board.RestController;
 
-import com.project.board.DTO.CreateUserRequest;
-import com.project.board.DTO.LoginUserRequest;
+
+import com.project.board.DTO.Request.CreateUserRequest;
+import com.project.board.DTO.Request.LoginUserRequest;
 import com.project.board.DTO.Response.ResponseAccessToken;
 import com.project.board.DTO.Response.ResponseLoginToken;
 import com.project.board.DTO.Response.ResponseUserInfo;
@@ -12,17 +13,14 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CookieValue;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
 public class UserRestController {
     private final UserService userService;
     private final JwtToken jwtToken;
-    
+
     @PostMapping("/user/signup")
     public ResponseEntity<Void> CreateUser(@Valid @RequestBody CreateUserRequest createUserRequest){
         userService.CreateUser(createUserRequest);

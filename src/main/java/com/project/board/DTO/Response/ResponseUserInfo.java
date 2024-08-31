@@ -1,7 +1,12 @@
 package com.project.board.DTO.Response;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.time.LocalDateTime;
 
+@Getter
+@Setter
 public class ResponseUserInfo {
     public String user_id;
     public String user_nickname;

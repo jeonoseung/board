@@ -1,0 +1,45 @@
+
+const userIdInput = document.getElementById("user-id-input")
+const userPassInput = document.getElementById("user-pass-input")
+
+const clickLogin = async  () =>{
+    
+    const userId = userIdInput.value
+    const userPass = userPassInput.value
+    if(userId.length === 0){
+        alert("아이디를 입력해 주세요.")
+    }
+    else if(userPass.length === 0){
+        alert("비밀번호를 입력해 주세요.")
+    }
+    else {
+        const body = {
+            user_id:userId,
+            user_pass:userPass
+        }
+        const res = await Fetch.POST({
+                url:"/user/login",
+                body
+        })
+        const { access_token,refresh_token } = res
+        setCookie({
+            name:"access_token",
+            value:access_token,
+            age:3600 * 24
+        })
+        setCookie({
+            name:"refresh_token",
+            value:refresh_token,
+            age:3600 * 24 * 7
+        })
+        window.location.href="/"
+    }
+}
+
+const keyUpEnter = (e) =>{
+    if(e.key === "Enter"){
+        clickLogin()
+    }
+}
+
+userPassInput.addEventListener("keyup",keyUpEnter)
