@@ -56,4 +56,13 @@ public class UserService {
         return responseUserInfo;
     }
 
+    public boolean UserIdReCheck(String user_id){
+         UserEntity user = userRepo.findUserId(user_id);
+        return user != null;
+    }
+
+    public boolean UserNicknameReCheck(String user_nickname){
+        UserEntity user = userRepo.findUserNickname(user_nickname);
+        return user != null;
+    }
 }

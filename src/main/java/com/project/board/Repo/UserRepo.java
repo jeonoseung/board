@@ -22,4 +22,7 @@ public interface UserRepo extends JpaRepository<UserEntity,Long> {
     
     @Query(value = "SELECT u FROM UserEntity u WHERE u.user_id = :user_id")
     UserEntity findUserId(@Param("user_id") String user_id);
+
+    @Query(value = "SELECT u FROM UserEntity u WHERE u.user_nickname = :user_nickname")
+    UserEntity findUserNickname(@Param("user_nickname") String user_nickname);
 }

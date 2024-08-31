@@ -10,7 +10,10 @@ import com.project.board.Enum.TokenType;
 import com.project.board.Service.UserService;
 import com.project.board.Utils.JwtToken;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.annotations.Parameter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -61,5 +64,18 @@ public class UserRestController {
         body.setAccessToken(access_token);
 
         return ResponseEntity.status(HttpStatus.OK).body(body);
+    }
+
+    @GetMapping("/user/check/id")
+    public void CheckUserId(@Valid @NotBlank(message = "아이디를 입력해 주세요.") @Pattern(regexp = "^[a-zA-Z0-9]*$", message = "영문자와 숫자만 입력 가능합니다.") @RequestParam(value="user_id",required = false) String user_id){
+        if(userService.UserIdReCheck(user_id)){
+            throw new IllegalArgumentException("이미 가입되어 있는 아이디입니다.");
+        }
+    }
+    @GetMapping("/user/check/nickname")
+    public void CheckUserNickname(@Valid @NotBlank(message = "닉네임 입력해 주세요.") @Pattern(regexp = "^[가-힣a-zA-Z0-9]*$", message = "영문자와 숫자만 입력 가능합니다.") @RequestParam(value="user_nickname",required = false) String user_nickname){
+        if(userService.UserNicknameReCheck(user_nickname)){
+            throw new IllegalArgumentException("이미 가입되어 있는 닉네임입니다.");
+        }
     }
 }
