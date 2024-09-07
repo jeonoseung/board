@@ -32,7 +32,15 @@ const clickLogin = async  () =>{
             value:refresh_token,
             age:3600 * 24 * 7
         })
-        window.location.href="/"
+        const url = new URLSearchParams(location.search);
+        const redirect = url.get("redirect_url")
+        if(redirect){
+            window.location.href=redirect
+        }
+        else {
+            window.location.href="/"
+        }
+
     }
 }
 
