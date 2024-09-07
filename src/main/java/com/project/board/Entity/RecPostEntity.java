@@ -19,7 +19,7 @@ public class RecPostEntity {
     private PostEntity rec_post_pid;
     
     @ManyToOne
-    @JoinColumn(name="rec_user_pid",nullable = false,referencedColumnName = "user_pid")
+    @JoinColumn(name="rec_user_id",nullable = false,referencedColumnName = "user_id")
     private UserEntity rec_user_pid;
     
     @Column(nullable = false)

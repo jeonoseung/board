@@ -28,11 +28,27 @@ public class CommentEntity {
     private LocalDateTime comment_create_date;
     
     @ManyToOne
-    @JoinColumn(name = "comment_author", referencedColumnName = "user_pid",nullable = false)
+    @JoinColumn(name = "comment_author", referencedColumnName = "user_id",nullable = false)
     private UserEntity comment_author;
+
+    @Column
+    private Long comment_target;
 
     @PrePersist
     public void setDate(){
         this.comment_create_date = LocalDateTime.now();
+    }
+
+    public void setComment(String comment){
+        this.comment_content = comment;
+    }
+    public void setCommentPost(PostEntity post_pid){
+        this.comment_post = post_pid;
+    }
+    public void setCommentAuthor(UserEntity user_id){
+        this.comment_author = user_id;
+    }
+    public void setCommentTarget(Long comment_pid){
+        this.comment_target = comment_pid;
     }
 }
