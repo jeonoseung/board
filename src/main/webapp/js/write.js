@@ -7,6 +7,7 @@ const quill = new Quill('#editor', {
 quill.root.setAttribute('spellcheck', false)
 const ClickButton = async  () =>{
     const title = document.getElementById("title-input").value;
+    const category = document.getElementById("category-select")
     const html = quill.root.innerHTML;
     const text = quill.root.innerText;
     if(title.length < 5){
@@ -19,7 +20,7 @@ const ClickButton = async  () =>{
         const body = {
             post_title:title,
             post_content:html,
-            post_category:1
+            post_category:category.value
         }
         Fetch.POST({
             url:"/post",

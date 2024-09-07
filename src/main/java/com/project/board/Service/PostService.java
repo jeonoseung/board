@@ -1,7 +1,9 @@
 package com.project.board.Service;
 
 import java.util.List;
+import java.util.regex.Pattern;
 
+import com.project.board.DTO.QuerInterface.PostListView;
 import com.project.board.DTO.Request.CreatePostRequest;
 import com.project.board.Entity.UserEntity;
 import com.project.board.Enum.PostState;
@@ -22,19 +24,33 @@ public class PostService {
     private final CategoryRepo categoryRepo;
     private final UserRepo userRepo;
 
-    public List<PostEntity> GetPostList(int page){
-        int start = page;
-        int length = 10;
-        if(start < 1){
-            start = 1;
+    public List<PostListView> GetPostList(String page){
+        String regex = "^\\d+$";
+        if(page != null){
+            boolean isNumber = Pattern.matches(regex,page);
+            if(isNumber){
+                int c = Integer.parseInt(page);
+                c--;
+                int length = 10;
+                if(c < 0){
+                    c = 0;
+                }
+
+                return postRepo.getPostList(c*length,PostState.ACTIVE.name());
+            }
+            else {
+                return postRepo.getPostList(0,PostState.ACTIVE.name());
+            }
         }
         else {
-            start -= 1;
+            return postRepo.getPostList(0,PostState.ACTIVE.name());
         }
-        int end = page * length;
-        List<PostEntity> posts = postRepo.postList(start,end);
+    }
 
-        return posts;
+    public PostListView getPostDetail(Long pid){
+        postRepo.incrementPostViewCount(pid);
+        PostListView post = postRepo.getPost(pid,PostState.ACTIVE.name());
+        return post;
     }
 
     public Long GetPostLength (){

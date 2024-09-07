@@ -9,7 +9,14 @@
 <body>
     <div class="write-container">
         <div class="write-box">
-            <input tpye="text" id="title-input" class="input-box" placeholder="제목을 입력해 주세요." spellcheck="false"/>
+            <div class="flex gap-4 item-center">
+                <select id="category-select" class="category-select-box">
+                        <c:forEach var="item" items="${category}">
+                            <option value="${item.category_pid}">${item.category_name}</option>
+                        </c:forEach>
+                    </select>
+                <input tpye="text" id="title-input" class="input-box" placeholder="제목을 입력해 주세요." spellcheck="false"/>
+            </div>
             <div>
                 <div id="editor"></div>
             </div>

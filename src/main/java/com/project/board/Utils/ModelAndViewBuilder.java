@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 
 
@@ -25,6 +27,17 @@ public class ModelAndViewBuilder {
         this.userService = userService;
     }
     
+    public ModelAndView redirect(String url){
+        mv.setViewName("redirect:"+url);
+        return this.mv;
+    }
+
+    public ModelAndView loginRedirect(String url){
+        String encode = URLEncoder.encode(url, StandardCharsets.UTF_8);
+        mv.setViewName("redirect:/login?redirect_url="+encode);
+        return this.mv;
+    }
+
     public ModelAndViewBuilder init(HttpServletRequest req){
         this.mv.setViewName("layout");
         Cookie[] cookies = req.getCookies();
