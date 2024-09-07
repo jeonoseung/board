@@ -6,12 +6,56 @@
 <body>
     <div class="container">
         <div class="content">
-            <c:forEach var="item" items="${post}">
-                <div class="post-row">
-                    <p>${item.post_pid}</p>
-                    <p>${item.post_title}</p>
-                </div>
-            </c:forEach>
+            <c:choose>
+                <c:when test="${empty post}">
+                    <p class="not-list">조회할 수 있는 게시글이 없습니다.</p>
+                </c:when>
+                <c:otherwise>
+                    <div class="post-table">
+                        <c:forEach var="item" items="${post}">
+                            <a href="/post/${item.post_pid}" class="post-row">
+                                <div class="top-area">
+                                    <p class="title">
+                                        <span class="category">${item.category_name}</span>
+                                        <strong>
+                                            ${item.post_title}
+                                        </strong>
+                                    </p>
+                                    <p class="nickname">${item.user_nickname}</p>
+                                </div>
+                                <div class="middle-content">
+                                    ${item.post_content}
+                                </div>
+                                <div class="bottom-area">
+                                    <p class="">
+                                        <span class="comment">댓글 ${item.comment_count}</span>
+                                        <span class="recommend">추천 ${item.rec_count}</span>
+                                        <span class="view">조회 ${item.post_view}</span>
+                                    </p>
+                                    <p class="date" data-date="${item.post_create_date}"></p>
+                                </div>
+                            </a>
+                        </c:forEach>
+                    </div>
+                </c:otherwise>
+            </c:choose>
+            <div class="pagination-box" id="post-pagination">
+            </div>
+            <script>
+                viewPagination("post-pagination",${post_length})
+                        document.addEventListener("DOMContentLoaded", function() {
+                            const dateElements = document.querySelectorAll(".date");
+                            const content = document.querySelectorAll(".middle-content");
+                            dateElements.forEach(function(el) {
+                                const date = el.getAttribute("data-date");
+                                el.innerText = setAfterDate(date);
+                            });
+                            content.forEach((el)=>{
+                                const text = el.innerText;
+                                el.innerHTML = text;
+                            })
+                        });
+            </script>
         </div>
     </div>
 </body>
