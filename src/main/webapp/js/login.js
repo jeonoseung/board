@@ -17,30 +17,32 @@ const clickLogin = async  () =>{
             user_id:userId,
             user_pass:userPass
         }
-        const res = await Fetch.POST({
+        Fetch.POST({
                 url:"/user/login",
                 body
-        })
-        const { access_token,refresh_token } = res
-        setCookie({
-            name:"access_token",
-            value:access_token,
-            age:3600 * 24
-        })
-        setCookie({
-            name:"refresh_token",
-            value:refresh_token,
-            age:3600 * 24 * 7
-        })
-        const url = new URLSearchParams(location.search);
-        const redirect = url.get("redirect_url")
-        if(redirect){
-            window.location.href=redirect
-        }
-        else {
-            window.location.href="/"
-        }
-
+        }).then((res)=>{
+                const { access_token,refresh_token } = res
+                setCookie({
+                    name:"access_token",
+                    value:access_token,
+                    age:60 * 60 * 24
+                })
+                setCookie({
+                    name:"refresh_token",
+                    value:refresh_token,
+                    age:60 * 60 * 24 * 7
+                })
+                const url = new URLSearchParams(location.search);
+                const redirect = url.get("redirect_url")
+                if(redirect){
+                    window.location.href=redirect
+                }
+                else {
+                    window.location.href="/"
+                }
+            }).catch((error)=>{
+                alert(error.message)
+            })
     }
 }
 

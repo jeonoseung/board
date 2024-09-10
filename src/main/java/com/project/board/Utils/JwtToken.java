@@ -3,9 +3,11 @@ package com.project.board.Utils;
 import com.project.board.Enum.TokenType;
 import com.project.board.ExceptionHandler.UnauthorizedException;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Encoders;
 import io.jsonwebtoken.security.Keys;
+import io.jsonwebtoken.security.SignatureException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -22,14 +24,25 @@ public class JwtToken {
     public String encodeKey(String key){
         return Encoders.BASE64.encode(key.getBytes(StandardCharsets.UTF_8));
     }
-    
-    public void checkToken(String token) {
+
+    public boolean checkToken(String token) {
          if(token == null || token.trim().isEmpty()){
-             throw new UnauthorizedException("로그인 후 이용 가능합니다.");
+             return false;
          }
          else if(token.chars().filter(ch -> ch == '.').count() != 2){
-             throw new IllegalArgumentException("유효하지 않은 토큰입니다.");
+             return false;
          }
+         else {
+             return true;
+         }
+    }
+    public void checkTokenThrow(String token){
+        if(token == null || token.trim().isEmpty()){
+            throw new UnauthorizedException("로그인 후 이용 가능합니다.");
+        }
+        else if(token.chars().filter(ch -> ch == '.').count() != 2){
+            throw new IllegalArgumentException("유효하지 않은 토큰입니다.");
+        }
     }
 
     public SecretKey setKey(){
@@ -37,17 +50,12 @@ public class JwtToken {
     }
 
     public String createToken(String userId, TokenType Token) {
-        int once_second = 1000;
-        int second = once_second * 60;
-        int min = 60;
-        int hour = 24;
-        int day = 7;
         
         long time = System.currentTimeMillis();
         
         Date expriation = switch (Token) {
-            case ACCESS -> new Date(second * min * hour + time);
-            case REFRESH -> new Date(second * min * hour * day + time);
+            case ACCESS -> new Date(1000 * 60 * 60 * 24 + time);
+            case REFRESH -> new Date(1000 * 60 * 60 * 24 * 7 + time);
         };
 
         return Jwts.builder()
@@ -75,9 +83,21 @@ public class JwtToken {
         return expiration.before(new Date());
     }
     
+    public boolean checkValidateToken(String token){
+        if(!checkToken(token)){
+            return false;
+        }
+        try {
+            Jwts.parserBuilder().setSigningKey(setKey()).build().parseClaimsJws(token);
+            return true;
+        } catch (SignatureException | IllegalArgumentException | ExpiredJwtException e) {
+            return false;
+        }
+    }
+
     // 토큰 검증 메서드
     public boolean validateToken(String token) {
-        checkToken(token);
+        checkTokenThrow(token);
         try {
             Jwts.parserBuilder().setSigningKey(setKey()).build().parseClaimsJws(token);
             return true;
