@@ -48,7 +48,10 @@ public class ModelAndViewBuilder {
                     token = cookie.getValue();
                 }
             }
-            if(token != null){
+            if(!jwtToken.checkToken(token)){
+                mv.addObject("user",null);
+            }
+            else if(token != null){
                 String user_id = jwtToken.getUserId(token);
                 ResponseUserInfo userInfo = userService.GetUserInfo(user_id);
                 mv.addObject("user",userInfo);
