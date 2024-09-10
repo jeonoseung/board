@@ -4,6 +4,9 @@
 <!doctype html>
 <html lang="ko">
 <body>
+    <script>
+        let d = null;
+    </script>
     <div class="container">
         <div class="content">
             <c:choose>
@@ -23,9 +26,13 @@
                                     </p>
                                     <p class="nickname">${item.user_nickname}</p>
                                 </div>
-                                <div class="middle-content">
-                                    ${item.post_content}
+                                <div class="middle-content" id="middle-${item.post_pid}">
                                 </div>
+                                <script>
+                                    d = document.createElement("div")
+                                    d.innerHTML = `${item.post_content}`;
+                                    document.getElementById("middle-${item.post_pid}").innerText = d.innerText;
+                                </script>
                                 <div class="bottom-area">
                                     <p class="">
                                         <span class="comment">댓글 ${item.comment_count}</span>
@@ -45,15 +52,11 @@
                 viewPagination("post-pagination",${post_length})
                         document.addEventListener("DOMContentLoaded", function() {
                             const dateElements = document.querySelectorAll(".date");
-                            const content = document.querySelectorAll(".middle-content");
                             dateElements.forEach(function(el) {
                                 const date = el.getAttribute("data-date");
                                 el.innerText = setAfterDate(date);
                             });
-                            content.forEach((el)=>{
-                                const text = el.innerText;
-                                el.innerHTML = text;
-                            })
+
                         });
             </script>
         </div>
