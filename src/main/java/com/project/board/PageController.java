@@ -13,6 +13,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpRequest;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
@@ -35,9 +36,16 @@ public class PageController {
     private final CategoryService categoryService;
 
     @RequestMapping("/")
-    public ModelAndView ViewMainPage(HttpServletRequest req){
+    public ModelAndView ViewMainPage(
+            HttpServletRequest req,
+            @CookieValue(value="access_token",required = false) String access
+    ){
         String page = req.getParameter("page");
-        List<PostListView> posts = postService.GetPostList(page);
+        String id = "";
+        if(jwtToken.checkValidateToken(access)){
+            id = jwtToken.getUserId(access);
+        }
+        List<PostListView> posts = postService.GetPostList(page,id);
         ModelAndView mv = new ModelAndViewBuilder(jwtToken,userService).init(req).viewContent("index.jsp").build();
 
         mv.addObject("post",posts);
@@ -74,7 +82,11 @@ public class PageController {
     }
 
     @RequestMapping("/post/{post_pid}")
-    public ModelAndView PostViewPage(HttpServletRequest req, @PathVariable(value = "post_pid",required = false) String post_pid){
+    public ModelAndView PostViewPage(
+            HttpServletRequest req,
+            @PathVariable(value = "post_pid",required = false) String post_pid,
+            @CookieValue(value="access_token",required = false) String access
+    ){
         if(post_pid == null){
             return new ModelAndViewBuilder(jwtToken,userService).redirect("/");
         }
@@ -83,10 +95,14 @@ public class PageController {
         if(!isNumber){
             return new ModelAndViewBuilder(jwtToken,userService).redirect("/");
         }
+        String id = "";
+        if(jwtToken.checkValidateToken(access)){
+            id = jwtToken.getUserId(access);
+        }
         Long pid = Long.parseLong(post_pid);
         ModelAndView mv = new ModelAndViewBuilder(jwtToken,userService).init(req).viewContent("post/index.jsp").build();
-        mv.addObject("post",postService.getPostDetail(pid));
-        mv.addObject("comment",commentService.getPostCommentList(pid));
+        mv.addObject("post",postService.getPostDetail(pid, id));
+        mv.addObject("comment",commentService.getPostCommentList(pid, id));
         return mv;
     }
 }
