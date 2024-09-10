@@ -20,7 +20,7 @@ public class RecCommentEntity {
     
     @ManyToOne
     @JoinColumn(name="rec_user_id",nullable = false,referencedColumnName = "user_id")
-    private UserEntity rec_user_pid;
+    private UserEntity rec_user_id;
     
     @Column(nullable = false)
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")

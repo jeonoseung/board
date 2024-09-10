@@ -19,7 +19,8 @@ public interface PostRepo extends JpaRepository<PostEntity,Long> {
     List<PostEntity> postListRecent();
 
     @Query(value = "SELECT p.post_pid, p.post_title, p.post_content, p.post_create_date, u.user_nickname, c.category_name, p.post_view, " +
-                   "COUNT(cm.comment_pid) AS comment_count, COUNT(rec.rec_pid) AS rec_count " +
+                   "COUNT(cm.comment_pid) AS comment_count, COUNT(rec.rec_pid) AS rec_count, IF(p.post_author = :user_id,true,false) AS post_mine, " +
+                   "IF((SELECT COUNT(*) FROM board.post_rec WHERE rec_post_pid = p.post_pid AND rec_user_id = :user_id) >= 1,true,false) AS post_recommend " +
                    "FROM post p " +
                    "INNER JOIN user u ON p.post_author = u.user_id " +
                    "INNER JOIN category c ON p.post_category = c.category_pid " +
@@ -30,10 +31,11 @@ public interface PostRepo extends JpaRepository<PostEntity,Long> {
                    "ORDER BY p.post_pid DESC " +
                    "LIMIT 10 OFFSET :offset",
            nativeQuery = true)
-    List<PostListView> getPostList(@Param("offset") int offset, @Param("state") String state);
+    List<PostListView> getPostList(@Param("offset") int offset, @Param("state") String state, @Param("user_id") String user_id);
 
     @Query(value = "SELECT p.post_pid, p.post_title, p.post_content, p.post_create_date, u.user_nickname, c.category_name, p.post_view, " +
-                   "COUNT(cm.comment_pid) AS comment_count, COUNT(rec.rec_pid) AS rec_count " +
+                   "COUNT(cm.comment_pid) AS comment_count, COUNT(rec.rec_pid) AS rec_count, IF(p.post_author = :user_id,true,false) AS post_mine, " +
+                   "IF((SELECT COUNT(*) FROM board.post_rec WHERE rec_post_pid = p.post_pid AND rec_user_id = :user_id) >= 1,true,false) AS post_recommend " +
                    "FROM post p " +
                    "INNER JOIN user u ON p.post_author = u.user_id " +
                    "INNER JOIN category c ON p.post_category = c.category_pid " +
@@ -43,10 +45,18 @@ public interface PostRepo extends JpaRepository<PostEntity,Long> {
                    "GROUP BY p.post_pid " +
                    "ORDER BY p.post_pid DESC ",
            nativeQuery = true)
-    PostListView getPost(@Param("pid") Long pid, @Param("state") String state);
+    PostListView getPost(@Param("pid") Long pid, @Param("state") String state, @Param("user_id") String user_id);
 
     @Transactional
     @Query(value = "UPDATE post SET post_view = post_view + 1 WHERE post_pid = :pid", nativeQuery = true)
     @Modifying
     void incrementPostViewCount(@Param("pid") Long pid);
+
+    @Query(value = "SELECT * FROM post p WHERE p.post_pid = :post_pid AND p.post_author = :user_id",nativeQuery = true)
+    PostEntity findPost(@Param("post_pid") Long post_pid, @Param("user_id") String user_id);
+
+    @Transactional
+    @Query(value = "UPDATE post SET post_state = :state WHERE post_pid = :post_pid", nativeQuery = true)
+    @Modifying
+    void updatePostState(@Param("post_pid") Long post_pid, @Param("state") String state);
 }

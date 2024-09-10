@@ -13,4 +13,6 @@ public interface PostListView {
     public int getComment_count();
     public int getRec_count();
     public int getPost_view();
+    public int getPost_mine();
+    public int getPost_recommend();
 }

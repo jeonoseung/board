@@ -7,7 +7,9 @@ import com.project.board.DTO.QuerInterface.PostListView;
 import com.project.board.DTO.Request.CreatePostRequest;
 import com.project.board.Entity.UserEntity;
 import com.project.board.Enum.PostState;
+import com.project.board.ExceptionHandler.UnauthorizedException;
 import com.project.board.Repo.UserRepo;
+import com.project.board.Utils.JwtToken;
 import org.springframework.stereotype.Service;
 
 import com.project.board.Entity.CategoryEntity;
@@ -23,8 +25,9 @@ public class PostService {
     private final PostRepo postRepo;
     private final CategoryRepo categoryRepo;
     private final UserRepo userRepo;
+    private final JwtToken jwtToken;
 
-    public List<PostListView> GetPostList(String page){
+    public List<PostListView> GetPostList(String page, String user_id){
         String regex = "^\\d+$";
         if(page != null){
             boolean isNumber = Pattern.matches(regex,page);
@@ -36,20 +39,20 @@ public class PostService {
                     c = 0;
                 }
 
-                return postRepo.getPostList(c*length,PostState.ACTIVE.name());
+                return postRepo.getPostList(c*length,PostState.ACTIVE.name(),user_id);
             }
             else {
-                return postRepo.getPostList(0,PostState.ACTIVE.name());
+                return postRepo.getPostList(0,PostState.ACTIVE.name(),user_id);
             }
         }
         else {
-            return postRepo.getPostList(0,PostState.ACTIVE.name());
+            return postRepo.getPostList(0,PostState.ACTIVE.name(),user_id);
         }
     }
 
-    public PostListView getPostDetail(Long pid){
+    public PostListView getPostDetail(Long pid, String user_id){
         postRepo.incrementPostViewCount(pid);
-        PostListView post = postRepo.getPost(pid,PostState.ACTIVE.name());
+        PostListView post = postRepo.getPost(pid,PostState.ACTIVE.name(),user_id);
         return post;
     }
 
@@ -66,9 +69,20 @@ public class PostService {
         post.setTitle(createPostRequest.GetPostTitle());
         post.setContent(createPostRequest.GetPostContent());
         post.setCategory(category);
-        post.setPost_state(PostState.ACTIVE);
-        post.setPost_keyword(createPostRequest.GetPostKeyword());
+        post.setState(PostState.ACTIVE);
+//        post.setPostKeyword(createPostRequest.GetPostKeyword());
         post.setAuthor(user);
         postRepo.save(post);
+    }
+    public void deletePost(Long pid, String token){
+        if(jwtToken.validateToken(token)){
+            String user_id = jwtToken.getUserId(token);
+            postRepo.findById(pid).orElseThrow(()->new IllegalArgumentException("게시글을 찾을 수 없습니다."));
+            PostEntity post = postRepo.findPost(pid,user_id);
+            if(post == null){
+                throw new UnauthorizedException("삭제 권한이 없습니다.");
+            }
+            postRepo.updatePostState(pid,PostState.DELETE.name());
+        }
     }
 }

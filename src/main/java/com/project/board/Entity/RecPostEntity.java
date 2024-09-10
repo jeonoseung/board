@@ -20,12 +20,20 @@ public class RecPostEntity {
     
     @ManyToOne
     @JoinColumn(name="rec_user_id",nullable = false,referencedColumnName = "user_id")
-    private UserEntity rec_user_pid;
+    private UserEntity rec_user_id;
     
     @Column(nullable = false)
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime rec_date;
     
+    public void setUserId(UserEntity user){
+        this.rec_user_id = user;
+    }
+
+    public void setPostPid(PostEntity post){
+        this.rec_post_pid = post;
+    }
+
     @PrePersist
     public void setDate(){
         this.rec_date = LocalDateTime.now();

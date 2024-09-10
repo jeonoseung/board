@@ -1,5 +1,6 @@
 package com.project.board.Service;
 
+import com.project.board.DTO.QuerInterface.CommentList;
 import com.project.board.DTO.Request.CreateCommentRequest;
 import com.project.board.Entity.CommentEntity;
 import com.project.board.Entity.PostEntity;
@@ -8,6 +9,7 @@ import com.project.board.ExceptionHandler.UnauthorizedException;
 import com.project.board.Repo.CommentRepo;
 import com.project.board.Repo.PostRepo;
 import com.project.board.Repo.UserRepo;
+import com.project.board.Utils.JwtToken;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +21,7 @@ public class CommentService {
     private final CommentRepo commentRepo;
     private final PostRepo postRepo;
     private final UserRepo userRepo;
+    private final JwtToken jwtToken;
     public void createComment(CreateCommentRequest createCommentRequest,String user_id){
         PostEntity post = postRepo.findById(createCommentRequest.getPostPid())
         .orElseThrow(() -> new IllegalArgumentException("해당 게시글에 댓글을 작성할 수 없습니다."));
@@ -40,9 +43,23 @@ public class CommentService {
         commentRepo.save(commentEntity);
     }
     
-    public List<CommentEntity> getPostCommentList(Long post_pid){
-        PostEntity post = postRepo.findById(post_pid)
-        .orElseThrow(() -> new IllegalArgumentException("게시글을 조회할 수 없습니다.."));
-        return commentRepo.findPostCommentList(post);
+    public List<CommentList> getPostCommentList(Long post_pid, String user_id){
+        List<CommentList> comment = commentRepo.findPostCommentList(post_pid,user_id);
+        return comment;
+    }
+
+    public void deleteComment(Long comment_pid, String token){
+        if(jwtToken.validateToken(token)){
+            String user_id = jwtToken.getUserId(token);
+            CommentEntity c = commentRepo.findCommentId(comment_pid);
+            if(c == null){
+                throw new IllegalArgumentException("삭제하려는 댓글을 찾을 수 없습니다.");
+            }
+            CommentEntity comment = commentRepo.findAuthor(comment_pid,user_id);
+            if(comment == null){
+                throw new UnauthorizedException("삭제 권한이 없습니다.");
+            }
+            commentRepo.delete(comment);
+        }
     }
 }
