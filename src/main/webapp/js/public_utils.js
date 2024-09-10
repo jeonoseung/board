@@ -4,19 +4,24 @@ const setCookie = ({ name,value,age }) =>{
     document.cookie = `${name}=${value}; max-age=${age}`
 }
 
-const deleteCookie = ({ name }) =>{
-    document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:01;';
+const deleteCookie = async  ({ name }) =>{
+    document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:01; path=/;';
 }
 
 const goPage = (url) =>{
     window.location.href=url;
 }
 
-const userLogout = () =>{
-    deleteCookie({
+const needLogin = () =>{
+    const current = location.pathname
+    goPage(`/login?redirect_url=${encodeURIComponent(current)}`)
+}
+
+const userLogout = async () =>{
+    await deleteCookie({
         name:"access_token"
     })
-    deleteCookie({
+    await deleteCookie({
         name:"refresh_token"
     })
     goPage("/")
@@ -26,7 +31,7 @@ function makeButton(c,i,target){
     const button = document.createElement("button")
     button.innerText = i;
     if(c === i){
-        button.className = `page-btn bg-primary`
+        button.className = `page-btn-active`
     }
     else {
         button.className = `page-btn`
@@ -77,7 +82,7 @@ function viewPagination (element_id,length){
     const page = url.get("page")
 
     let current = 1;
-    let p = length / 10
+    let p = Math.floor(length / 10)
     const p_arr = []
     for(let i=0;i<p;i++){
         p_arr.push(i+1)
@@ -99,7 +104,6 @@ function viewPagination (element_id,length){
     }
 
     const max_f = Math.floor(max / 2)
-
     const index = p_arr.indexOf(current)
     if(index < max_f){
         for(let i = 0;i<max;i++){
