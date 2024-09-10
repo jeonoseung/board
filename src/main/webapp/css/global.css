@@ -23,13 +23,18 @@ html {
 body {
     margin:0;
     font-family: "Pretendard";
-    font-weight:400;
-
     background: var(--gray-50)
 }
 
 body * {
     box-sizing: border-box;
+    font-weight:500;
+    font-size:1rem;
+}
+
+h1 {
+    font-size:2rem;
+    font-weight: 700;
 }
 
 p {
@@ -47,6 +52,9 @@ body > main {
 button {
     outline: none;
     border:0;
+}
+button:hover {
+    cursor:pointer;
 }
 header {
     background: var(--blue-500);
@@ -179,14 +187,6 @@ input:focus {
     cursor:pointer;
 }
 
-.page-btn {
-    background:white;
-    font-size:0.9rem;
-    font-weight:500;
-    color:black;
-}
-
-
 .category-select-box:focus {
     outline:none;
 }
@@ -208,6 +208,14 @@ input:focus {
     font-size:1rem;
     padding:0.5rem;
     border-radius: 0.25rem;
+}
+
+.danger-btn {
+    background: var(--red-500);
+    padding:0.25rem;
+    border-radius: 0.25rem;
+    color:white;
+    font-size:0.9rem;
 }
 
 .bg-primary {
@@ -288,10 +296,11 @@ input:focus {
 
 .post-row .middle-content {
     color:var(--gray-500);
-    font-size:0.9rem;
+    font-size:0.9rem !important;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    height:auto;
 }
 
 .post-row .bottom-area {
@@ -358,7 +367,7 @@ input:focus {
 }
 
 .not-list {
-    min-height:500px;
+    min-height:350px;
     width:100%;
     display:flex;
     justify-content: center;
@@ -375,10 +384,23 @@ input:focus {
 }
 
 .pagination-box button {
-    font-size:1rem;
     width:30px;
     height:30px;
     border-radius: 100px;
+    font-size:0.9rem;
+    font-weight:500;
+}
+
+.page-btn {
+    background:white;
+    color:black;
+    border:1px solid var(--gray-300)
+}
+
+.page-btn-active {
+    background:var(--blue-500);
+    color:white;
+    border:1px solid var(--blue-500)
 }
 
 .pagination-box button:hover {
@@ -413,7 +435,31 @@ input:focus {
     background: white;
     padding:1rem;
     border-radius: 0.5rem;
+}
+
+.post-content > .p-content {
     min-height:350px;
+}
+
+.post-recommend {
+    display:flex;
+    justify-content: center;
+}
+
+.post-rec-btn {
+    border:1px solid var(--red-500);
+    background:white;
+    color:var(--red-500);
+    padding:.5rem .75rem .5rem .75rem;
+    border-radius: 0.5rem;
+}
+
+.post-rec-btn-active {
+    border:1px solid var(--red-500);
+    background:var(--red-500);
+    color:white;
+    padding:.5rem .75rem .5rem .75rem;
+    border-radius: 0.5rem;
 }
 
 .post-comment-write {
@@ -454,5 +500,30 @@ input:focus {
     display:flex;
     flex-direction: row;
     gap:0.5rem;
+    font-size:0.9rem;
+}
+
+.comment-box {
+    border-bottom:1px solid var(--gray-300);
+    padding-top:0.75rem;
+    padding-bottom:0.75rem;
+}
+.comment-box:first-child {
+    padding-top:0;
+}
+.comment-box:last-child {
+    border:none;
+    padding-bottom:0;
+}
+.comment-box .cm-info {
+    display:flex;
+    justify-content: space-between;
+}
+.comment-box .cm-content {
+    white-space: pre-wrap;
+    padding-top:0.25rem;
+    padding-bottom:0.25rem;
+    color:var(--gray-700);
+    font-weight:400;
     font-size:0.9rem;
 }
