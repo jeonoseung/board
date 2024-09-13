@@ -27,6 +27,42 @@ const userLogout = async () =>{
     goPage("/")
 }
 
+function makeFirstButton(c,target){
+    const button = document.createElement("button")
+    button.innerHTML = `
+            <img src="/img/arrow_left.svg" width="20" height="20"/>
+        `
+    if(c === 1){
+        button.className = `page-btn-disabled`
+        button.disabled = true
+    }
+    else {
+        button.className = `page-btn`
+    }
+    button.onclick = () =>{
+        window.location.href = `/`
+    }
+    target.appendChild(button)
+}
+
+function makeLastButton(c,last,target){
+    const button = document.createElement("button")
+    button.innerHTML = `
+            <img src="/img/arrow_right.svg" width="20" height="20"/>
+        `
+    if(c === last){
+        button.className = `page-btn-disabled`
+        button.disabled = true
+    }
+    else {
+        button.className = `page-btn`
+    }
+    button.onclick = () =>{
+        window.location.href = `/?page=${last}`
+    }
+    target.appendChild(button)
+}
+
 function makeButton(c,i,target){
     const button = document.createElement("button")
     button.innerText = i;
@@ -105,6 +141,7 @@ function viewPagination (element_id,length){
 
     const max_f = Math.floor(max / 2)
     const index = p_arr.indexOf(current)
+    makeFirstButton(current,box)
     if(index < max_f){
         for(let i = 0;i<max;i++){
             makeButton(current,i+1,box)
@@ -122,6 +159,7 @@ function viewPagination (element_id,length){
             makeButton(current,splice_arr[i],box)
         }
     }
+    makeLastButton(current,p,box)
 }
 
 function getLastRouteParameter(){
