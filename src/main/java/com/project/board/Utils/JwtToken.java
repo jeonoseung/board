@@ -102,11 +102,11 @@ public class JwtToken {
             Jwts.parserBuilder().setSigningKey(setKey()).build().parseClaimsJws(token);
             return true;
         } catch (io.jsonwebtoken.security.SignatureException e) {
-            throw new IllegalArgumentException("서명 검증이 실패했습니다.");
+            throw new IllegalArgumentException("유저 정보가 올바르지 않습니다.\n다시 로그인해 주세요.");
         } catch (io.jsonwebtoken.ExpiredJwtException e) {
-            throw new IllegalArgumentException("토큰이 만료되었습니다.");
+            throw new IllegalArgumentException("로그인 기한이 만료되었습니다.\n다시 로그인해 주세요.");
         } catch (IllegalArgumentException e){
-            throw new IllegalArgumentException("오류가 발생했습니다.");
+            throw new IllegalArgumentException("오류가 발생했습니다.\n다시 로그인해 주세요.");
         }
     }
     

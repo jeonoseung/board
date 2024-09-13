@@ -48,7 +48,7 @@ public class ModelAndViewBuilder {
                     token = cookie.getValue();
                 }
             }
-            if(!jwtToken.checkToken(token)){
+            if(!jwtToken.checkValidateToken(token)){
                 mv.addObject("user",null);
             }
             else if(token != null){
