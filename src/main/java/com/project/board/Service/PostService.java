@@ -27,7 +27,7 @@ public class PostService {
     private final UserRepo userRepo;
     private final JwtToken jwtToken;
 
-    public List<PostListView> GetPostList(String page, String user_id){
+    public List<PostListView> GetPostList(String page, String user_id, String search, Long category){
         String regex = "^\\d+$";
         if(page != null){
             boolean isNumber = Pattern.matches(regex,page);
@@ -38,15 +38,14 @@ public class PostService {
                 if(c < 0){
                     c = 0;
                 }
-
-                return postRepo.getPostList(c*length,PostState.ACTIVE.name(),user_id);
+                return postRepo.getPostList(c*length,PostState.ACTIVE.name(),user_id,search,category);
             }
             else {
-                return postRepo.getPostList(0,PostState.ACTIVE.name(),user_id);
+                return postRepo.getPostList(0,PostState.ACTIVE.name(),user_id,search,category);
             }
         }
         else {
-            return postRepo.getPostList(0,PostState.ACTIVE.name(),user_id);
+            return postRepo.getPostList(0,PostState.ACTIVE.name(),user_id,search,category);
         }
     }
 
@@ -56,8 +55,8 @@ public class PostService {
         return post;
     }
 
-    public Long GetPostLength (){
-        return postRepo.count();
+    public Long GetPostLength (String search, Long category){
+        return postRepo.getPostListCount(PostState.ACTIVE.name(),search,category);
     }
 
     public void CreatePost(CreatePostRequest createPostRequest,String user_id) throws IllegalAccessException {

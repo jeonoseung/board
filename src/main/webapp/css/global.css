@@ -175,6 +175,31 @@ input:focus {
     box-sizing: border-box;
 }
 
+.width-100 {
+    width:100%;
+}
+
+.search-box {
+    display:flex;
+    flex-direction: row;
+    gap:0.5rem;
+    padding:0 1rem 0.5rem 1rem;
+}
+@media (max-width:768px) {
+    .search-box {
+
+        flex-direction: column;
+
+    }
+
+}
+
+.search-box .search-btn {
+    display:flex;
+    gap:0.5rem;
+    justify-content: end;
+}
+
 .category-select-box {
     width:100px;
     height:100%;
@@ -218,6 +243,19 @@ input:focus {
     border-radius: 0.25rem;
     color:white;
     font-size:0.9rem;
+}
+
+.primary-btn {
+    background: var(--blue-500);
+    padding:0.25rem;
+    border-radius: 0.25rem;
+    color:white;
+    font-size:0.9rem;
+}
+
+.btn-lg {
+    width:100px;
+    padding:0.5rem 0;
 }
 
 .bg-primary {

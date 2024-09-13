@@ -9,6 +9,41 @@
     </script>
     <div class="container">
         <div class="content">
+            <form class="search-box">
+                <div class="flex gap-4 item-center width-100">
+                    <select id="category-select" name="category" class="category-select-box">
+                        <option value="all">전체</option>
+                        <c:forEach var="item" items="${category}">
+                            <option
+                                value="${item.category_pid}"
+                                <c:if test="${param.category == item.category_pid.toString()}">
+                                    selected
+                                </c:if>
+                            >
+                            ${item.category_name}
+                            </option>
+                        </c:forEach>
+                    </select>
+                    <input
+                        type="text"
+                        name="search"
+                        class="input-box"
+                        id="post-search-input"
+                        spellcheck="off"
+                        <c:if test="${not empty param.search}">
+                            value="${param.search}"
+                        </c:if>
+                    />
+                </div>
+                <div class="search-btn">
+                    <button type="submit" class="primary-btn btn-lg">
+                        검색
+                    </button>
+                    <button type="reset" class="danger-btn btn-lg" onclick="goPage('/')">
+                        초기화
+                    </button>
+                </div>
+            </div>
             <c:choose>
                 <c:when test="${empty post}">
                     <p class="not-list">조회할 수 있는 게시글이 없습니다.</p>

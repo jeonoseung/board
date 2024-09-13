@@ -20,4 +20,8 @@ public class CategoryEntity {
 
     @Column(length=100,nullable = false)
     private String category_name;
+
+    public Long getCategory_pid(){
+        return category_pid;
+    }
 }

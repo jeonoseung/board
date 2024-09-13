@@ -1,6 +1,7 @@
 package com.project.board;
 
 import com.project.board.DTO.QuerInterface.PostListView;
+import com.project.board.Entity.CategoryEntity;
 import com.project.board.Entity.PostEntity;
 import com.project.board.Service.CategoryService;
 import com.project.board.Service.CommentService;
@@ -45,11 +46,28 @@ public class PageController {
         if(jwtToken.checkValidateToken(access)){
             id = jwtToken.getUserId(access);
         }
-        List<PostListView> posts = postService.GetPostList(page,id);
-        ModelAndView mv = new ModelAndViewBuilder(jwtToken,userService).init(req).viewContent("index.jsp").build();
+        String search = req.getParameter("search");
+        String category = req.getParameter("category");
+        String searchValue = "";
+        Long categoryValue = null;
 
+        if(search != null){
+            searchValue = search.trim();
+        }
+        if(category != null){
+            String regex = "^\\d+$";
+            boolean isNumber = Pattern.matches(regex,category);
+            System.out.println("111111");
+            if(isNumber){
+                Long cate = Long.parseLong(category);
+                categoryValue = cate;
+            }
+        }
+        List<PostListView> posts = postService.GetPostList(page,id,searchValue,categoryValue);
+        ModelAndView mv = new ModelAndViewBuilder(jwtToken,userService).init(req).viewContent("index.jsp").build();
         mv.addObject("post",posts);
-        mv.addObject("post_length",postService.GetPostLength());
+        mv.addObject("post_length",postService.GetPostLength(searchValue,categoryValue));
+        mv.addObject("category",categoryService.getCategoryList());
 
         return mv;
     }
@@ -101,7 +119,9 @@ public class PageController {
         }
         Long pid = Long.parseLong(post_pid);
         ModelAndView mv = new ModelAndViewBuilder(jwtToken,userService).init(req).viewContent("post/index.jsp").build();
-        mv.addObject("post",postService.getPostDetail(pid, id));
+        PostListView postDetail = postService.getPostDetail(pid, id);
+        mv.addObject("title",postDetail.getPost_title());
+        mv.addObject("post",postDetail);
         mv.addObject("comment",commentService.getPostCommentList(pid, id));
         return mv;
     }
