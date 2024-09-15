@@ -85,4 +85,19 @@ public interface PostRepo extends JpaRepository<PostEntity,Long> {
     @Query(value = "UPDATE post SET post_state = :state WHERE post_pid = :post_pid", nativeQuery = true)
     @Modifying
     void updatePostState(@Param("post_pid") Long post_pid, @Param("state") String state);
+
+    @Transactional
+    @Query(value = "UPDATE post " +
+                   "SET post_title = :post_title, " +
+                   "post_content = :post_content, " +
+                   "post_category = :post_category " +
+                   "WHERE post_pid = :post_pid",
+    nativeQuery = true)
+    @Modifying
+    void updatePost(
+            @Param("post_title") String post_title,
+            @Param("post_content") String post_content,
+            @Param("post_category") Long post_category,
+            @Param("post_pid") Long post_pid
+    );
 }

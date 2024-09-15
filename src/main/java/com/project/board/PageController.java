@@ -29,7 +29,7 @@ import java.util.regex.Pattern;
 @Controller
 @RequiredArgsConstructor
 public class PageController {
-    
+
     private final PostService postService;
     private final UserService userService;
     private final CommentService commentService;
@@ -123,6 +123,36 @@ public class PageController {
         mv.addObject("title",postDetail.getPost_title());
         mv.addObject("post",postDetail);
         mv.addObject("comment",commentService.getPostCommentList(pid, id));
+        return mv;
+    }
+    @RequestMapping("/update/{post_pid}")
+    public ModelAndView PostUpdatePage(
+            HttpServletRequest req,
+            @PathVariable(value = "post_pid",required = false) String post_pid,
+            @CookieValue(value="access_token",required = false) String access
+    ){
+        if(post_pid == null){
+            return new ModelAndViewBuilder(jwtToken,userService).redirect("/");
+        }
+        String regex = "^\\d+$";
+        boolean isNumber = Pattern.matches(regex,post_pid);
+        if(!isNumber){
+            return new ModelAndViewBuilder(jwtToken,userService).redirect("/");
+        }
+        String id = "";
+        if(jwtToken.checkValidateToken(access)){
+            id = jwtToken.getUserId(access);
+        }
+        else {
+            return new ModelAndViewBuilder(jwtToken,userService).redirect("/");
+        }
+
+        Long pid = Long.parseLong(post_pid);
+        ModelAndView mv = new ModelAndViewBuilder(jwtToken,userService).init(req).viewContent("update/index.jsp").build();
+        PostListView postDetail = postService.getPostDetail(pid, id);
+        mv.addObject("title","게시글 수정");
+        mv.addObject("post",postDetail);
+        mv.addObject("category",categoryService.getCategoryList());
         return mv;
     }
 }

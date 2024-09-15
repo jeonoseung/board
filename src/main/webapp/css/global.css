@@ -149,6 +149,10 @@ header .right a {
 
 }
 
+#editor {
+    background:white;
+}
+
 .write-box {
     display:flex;
     flex-direction: column;

@@ -53,7 +53,12 @@
                     </div>
                     <div class="btn-block">
                         <c:if test="${post.post_mine == 1}">
-                            <button class="danger-btn" onclick="deletePost(${post.post_pid})">
+                            <a href="/update/${post.post_pid}">
+                                <button class="primary-btn btn-lg">
+                                    수정
+                                </button>
+                            </a>
+                            <button class="danger-btn btn-lg" onclick="deletePost(${post.post_pid})">
                                 삭제
                             </button>
                         </c:if>

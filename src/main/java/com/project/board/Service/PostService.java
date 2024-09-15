@@ -84,4 +84,19 @@ public class PostService {
             postRepo.updatePostState(pid,PostState.DELETE.name());
         }
     }
+
+    public void updatePost(CreatePostRequest updatePostRequest,String user_id,Long post_pid){
+        CategoryEntity category = categoryRepo.findById(updatePostRequest.GetPostCategory())
+        .orElseThrow(() -> new IllegalArgumentException("카테고리가 올바르지 않습니다."));
+        UserEntity user = userRepo.findUserId(user_id);
+        if(user == null){
+            throw new UnauthorizedException("해당 게시글을 수정할 권한이 없습니다.");
+        }
+        postRepo.updatePost(
+                updatePostRequest.GetPostTitle(),
+                updatePostRequest.GetPostContent(),
+                updatePostRequest.GetPostCategory(),
+                post_pid
+        );
+    }
 }

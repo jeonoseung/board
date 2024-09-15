@@ -11,6 +11,7 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import lombok.Value;
+import org.springframework.boot.convert.PeriodUnit;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -62,4 +63,23 @@ public class PostRestController {
         return ResponseEntity.status(HttpStatus.OK).body(category);
     }
 
+    @PutMapping("/update/{post_pid}")
+    public ResponseEntity<Void> UpdatePost(
+            @PathVariable(value="post_pid",required = false) String post_pid,
+            @Valid @RequestBody CreatePostRequest updatePostRequest,
+            @CookieValue(value="access_token",required = false) String access
+    ) {
+        jwtToken.validateToken(access);
+        String regex = "^\\d+$";
+        boolean isNumber = Pattern.matches(regex,post_pid);
+        if(isNumber){
+            Long pid = Long.parseLong(post_pid);
+            String user_id = jwtToken.getUserId(access);
+            postService.updatePost(updatePostRequest,user_id,pid);
+        }
+        else {
+            throw new IllegalArgumentException("삭제하려는 게시글을 다시 확인해주세요.");
+        }
+        return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
 }
